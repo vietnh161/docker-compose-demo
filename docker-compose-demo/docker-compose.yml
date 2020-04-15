@@ -1,0 +1,35 @@
+version: "2.2"
+services: 
+    db:
+        build: ./db/
+        container_name: test-mysql
+        environment: 
+            MYSQL_ROOT_PASSWORD: "12345678"
+            MYSQL_DATABASE: "todo_db"
+            MYSQL_USER: "test"
+            MYSQL_PASSWORD: "12345678"
+            DATABASE_HOST: db
+        volumes: 
+            -   ./data:/var/lib/mysql
+        ports: 
+            -   6603:3306
+    server:
+        build: ./server/
+        volumes: 
+            -   ./server:/app/
+        depends_on: 
+            -   db
+        ports: 
+            -   3000:3000
+        restart: 
+            on-failure
+    client:
+        build: ./client/
+        volumes: 
+            -   ./client:/app/
+        ports: 
+            -   8080:8080
+        restart: 
+            on-failure 
+
+        
